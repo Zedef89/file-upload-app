@@ -1,26 +1,27 @@
-# Usa un'immagine con Node.js
+# Usa l'immagine base di Node.js
 FROM node:18
 
-# Installa il client PostgreSQL per poter usare pg_isready
+# Installa il client PostgreSQL
 RUN apt-get update && apt-get install -y postgresql-client
 
-# Imposta la cartella di lavoro dentro il container
+# Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia i file package.json e package-lock.json
+# Copia il package.json e installa le dipendenze
 COPY package*.json ./
-
-# Installa le dipendenze
 RUN npm install
 
-# Copia tutto il codice dentro il container
+# Copia tutti i file del progetto
 COPY . .
 
-# Costruisce l'app (opzionale, se usi `npm run build`)
+# 👉 Genera Prisma Client PRIMA del build di SvelteKit
+RUN npx prisma generate
+
+# 👉 Costruisce l'app SvelteKit
 RUN npm run build
 
-# Esponi la porta del server SvelteKit
+# Imposta la porta di esecuzione
 EXPOSE 5173
 
-# Comando per avviare il server SvelteKit
+# Comando di avvio
 CMD ["npm", "run", "dev"]
