@@ -1,0 +1,23 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Upload {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  category    String
+  language    String
+  provider    String
+  roles       String[]
+  localPath   String   // 📂 Percorso locale obbligatorio
+  minioPath   String?  // 🔗 Percorso MinIO (opzionale)
+  filePath    String   // 🔗 Percorso completo del file
+  uploadedAt  DateTime @default(now())
+}
