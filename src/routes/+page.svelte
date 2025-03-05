@@ -415,6 +415,7 @@ let previewUrl = writable('');
       <thead>
         <tr>
           <th>Title</th>
+          <th>Description</th> <!-- 🔹 Aggiunta colonna -->
           <th>Category</th>
           <th>Language</th>
           <th>Provider</th>
@@ -427,7 +428,7 @@ let previewUrl = writable('');
           const query = $searchQuery.toLowerCase();
           return (
             upload.title.toLowerCase().includes(query) ||
-            upload.description.toLowerCase().includes(query) ||
+            upload.description.toLowerCase().includes(query) ||  // 🔹 Inclusa descrizione nella ricerca
             upload.category.toLowerCase().includes(query) ||
             upload.language.toLowerCase().includes(query) ||
             upload.provider.toLowerCase().includes(query) ||
@@ -436,21 +437,18 @@ let previewUrl = writable('');
         }) as upload}
           <tr>
             <td>{upload.title}</td>
+            <td>{upload.description || 'N/A'}</td> <!-- 🔹 Aggiunto campo Description -->
             <td>{upload.category}</td>
             <td>{upload.language}</td>
             <td>{upload.provider}</td>
             <td>{upload.roles ? upload.roles.join(', ') : 'N/A'}</td>
             <td>
               <button on:click={() => previewFile(upload)}>🔗 View</button>
-            
               <button on:click={() => deleteUpload(upload.id)} class="delete-button">🗑️ Delete</button>
             </td>
-            
-            
           </tr>
         {/each}
       </tbody>
-      
     </table>
   </div>
 
