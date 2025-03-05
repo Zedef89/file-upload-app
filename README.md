@@ -32,7 +32,7 @@ Ensure you have the following installed:
 
 ### Clone the Repository
 ```sh
-git clone https://github.com/yourusername/file-upload-app.git
+git clone https://github.com/Zedef89/file-upload-app.git
 cd file-upload-app
 ```
 
@@ -143,7 +143,7 @@ Modify `docker-compose.prod.yml` to fit your production environment.
 ---
 
 ## License
-MIT License © 2025 Your Name
+MIT License © 2025 Nicola Mele
 
 ---
 
@@ -153,5 +153,5 @@ Feel free to open issues and contribute via pull requests!
 ---
 
 ## Contact
-For any inquiries, contact me at [your-email@example.com](mailto:your-email@example.com).
+For any inquiries, contact me at mele.nicola943@gmail.com.
 
