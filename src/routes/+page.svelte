@@ -17,6 +17,16 @@
 }
 
 
+// Variabili per la modale di benvenuto
+let showWelcomeModal = writable(true);
+
+// Funzione per chiudere la modale di benvenuto
+const closeWelcomeModal = () => {
+  showWelcomeModal.set(false);
+};
+
+
+
   let title = '';
   let description = '';
   let category = '';
@@ -33,10 +43,23 @@
   let showNotification = writable(false); // Per mostrare il popup
 
   // Opzioni per i dropdown
-  const categories = ["Leadership", "Managing Complexity", "Conflict Resolution"];
-  const languages = ["English", "Italian", "Spanish"];
-  const providers = ["Skilla", "Linkedin", "Pack", "Mentor"];
-  const roleOptions = ["Mentor / Coach", "Mentee / Coachee"];
+  const categories = [
+    "Leadership", "Managing Complexity", "Conflict Resolution",
+    "Communication", "Personal Growth", "Innovation", "Teamwork", "Strategy"
+  ];
+
+  const languages = [
+    "English", "Italian", "Spanish", "French", "German", "Portuguese",
+    "Chinese", "Japanese", "Russian", "Arabic", "Hindi", "Korean",
+    "Dutch", "Greek", "Swedish", "Turkish", "Polish", "Hebrew"
+  ];
+
+  const providers = ["Skilla", "Linkedin", "Pack", "Mentor", "Udemy", "Coursera", "HarvardX", "Google Academy"];
+
+  const roleOptions = [
+    "Mentor / Coach", "Mentee / Coachee", "Team Leader", "Project Manager", "HR Specialist",
+    "Entrepreneur", "Freelancer", "Consultant", "Trainer", "Developer"
+  ];
 
 
   // Carica i file già presenti
@@ -54,12 +77,12 @@
 
 
   const deleteUpload = async (id: string) => {
-  if (!confirm("❗ Sei sicuro di voler eliminare questa risorsa?")) return;
+  if (!confirm("❗ Are you sure you want to delete this resource?")) return;
 
   const res = await fetch(`/api/uploads/${id}`, { method: 'DELETE' });
 
   if (res.ok) {
-    message.set('✅ File eliminato con successo!');
+    message.set('✅ File deleted successfully!');
     showNotification.set(true); // Mostra il popup
     loadUploads();
 
@@ -69,14 +92,14 @@
       message.set('');
     }, 3000);
   } else {
-    message.set('❌ Errore durante l\'eliminazione');
+    message.set('❌ Error during deletion');
   }
 };
 
   // Gestione upload
   const handleUpload = async () => {
   if (!file) {
-    message.set('⚠️ Seleziona un file prima di caricare!');
+    message.set('⚠️ Select a file before uploading!');
     return;
   }
 
@@ -100,7 +123,7 @@
   isUploading.set(false);
 
   if (res.ok) {
-    message.set('✅ File caricato con successo!');
+    message.set('✅ File uploaded successfully!');
     showNotification.set(true); // Mostra il popup
     loadUploads();
 
@@ -121,7 +144,7 @@
       message.set('');
     }, 3000);
   } else {
-    message.set('❌ Errore durante l\'upload');
+    message.set('❌ Error during upload.');
   }
 };
 
@@ -134,7 +157,7 @@ let previewUrl = writable('');
     const url = upload.minioPath || upload.localPath; // 🔹 Usa MinIO se disponibile, altrimenti locale
 
     if (!url) {
-      console.error('❌ Nessun URL valido trovato.');
+      console.error('❌No valid URL found.');
       return;
     }
 
@@ -154,12 +177,113 @@ let previewUrl = writable('');
 
     showPreviewModal.set(true);
   } catch (err) {
-    console.error('❌ Errore nel recupero della preview:', err);
+    console.error('❌ Error retrieving the preview:', err);
   }
 }
 </script>
 
 <style>
+
+.modal-welcome-content {
+  background: white;
+  padding: 40px;  /* Aggiunto più padding per separare il contenuto dai bordi */
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);  /* Aggiunta ombra per un aspetto più professionale */
+}
+
+.modal-welcome h2 {
+  margin-bottom: 20px;
+  font-size: 24px;  /* Aumentata la dimensione del titolo per migliorare la leggibilità */
+}
+
+.modal-welcome p {
+  margin-bottom: 20px;
+  font-size: 16px;  /* Aumentata la dimensione del testo per una lettura più facile */
+}
+
+.modal-welcome ul {
+  list-style-type: disc;
+  margin-left: 30px;  /* Aggiunto spazio per l'elenco */
+  margin-bottom: 20px;
+}
+
+.modal-welcome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+
+
+  .close-btn {
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+
+  .close-btn:hover {
+    background-color: #e65a00;
+  }
+
+@media (max-width: 768px) {
+    .container {
+      width: 95%;
+      padding: 15px;
+    }
+
+    .input-field, select {
+      font-size: 16px;
+    }
+
+    .button-container {
+      flex-direction: column;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .modal-upload-content, .modal-preview-content {
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .preview-content {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .pdf-preview {
+      height: 60vh;
+    }
+  }
+
   .container {
     max-width: 800px;
     margin: auto;
@@ -371,6 +495,24 @@ let previewUrl = writable('');
 }
 </style>
 
+<!-- Modale di benvenuto -->
+{#if $showWelcomeModal}
+  <div class="modal-welcome">
+    <div class="modal-welcome-content">
+      <h2>Welcome to the File Upload App!</h2>
+      <p>This app allows you to upload, manage, and preview various resources such as videos, images, and PDFs.</p>
+      <p>Here's what you can do:</p>
+      <ul>
+        <li>Upload files and provide metadata like title, description, and category.</li>
+        <li>Search through your uploaded resources based on title, description, category, language, and provider.</li>
+        <li>Preview files in different formats (image, video, PDF) directly within the app.</li>
+        <li>Delete resources you no longer need.</li>
+      </ul>
+      <button class="close-btn" on:click={closeWelcomeModal}>Got it, show me the app!</button>
+    </div>
+  </div>
+{/if}
+
 <div class="container">
   <h2>Resources</h2>
 
@@ -382,7 +524,7 @@ let previewUrl = writable('');
   <input 
     type="text" 
     bind:value={$searchQuery} 
-    placeholder="🔍 Cerca..." 
+    placeholder="🔍 Search..." 
     class="search-bar" 
   />
 
@@ -393,18 +535,23 @@ let previewUrl = writable('');
     <div class="modal-preview-content">
       <button on:click={() => showPreviewModal.set(false)} class="close-btn">✖</button>
 
+      {#if $fileType === 'unknown'}
+      <p>⚠️ Preview not available for this format.</p>
+      <a href={$previewUrl} download>
+        <button class="button">Download File</button>
+      </a>
+    {:else}
       {#if $fileType === 'image'}
         <img src={$previewUrl} alt="Preview" class="preview-content">
       {:else if $fileType === 'video'}
         <video controls class="preview-content">
           <source src={$previewUrl} type="video/mp4">
-          Il tuo browser non supporta la riproduzione video.
+          Your browser does not support video playback.
         </video>
-        {:else if $fileType === 'pdf'}
+      {:else if $fileType === 'pdf'}
         <iframe src={$previewUrl} class="pdf-preview"></iframe>
-      {:else}
-        <p>⚠️ Preview non disponibile per questo formato.</p>
       {/if}
+    {/if}
     </div>
   </div>
 {/if}
@@ -415,7 +562,7 @@ let previewUrl = writable('');
       <thead>
         <tr>
           <th>Title</th>
-          <th>Description</th> <!-- 🔹 Aggiunta colonna -->
+          <th>Description</th> 
           <th>Category</th>
           <th>Language</th>
           <th>Provider</th>
@@ -428,7 +575,7 @@ let previewUrl = writable('');
           const query = $searchQuery.toLowerCase();
           return (
             upload.title.toLowerCase().includes(query) ||
-            upload.description.toLowerCase().includes(query) ||  // 🔹 Inclusa descrizione nella ricerca
+            upload.description.toLowerCase().includes(query) || 
             upload.category.toLowerCase().includes(query) ||
             upload.language.toLowerCase().includes(query) ||
             upload.provider.toLowerCase().includes(query) ||
@@ -437,7 +584,7 @@ let previewUrl = writable('');
         }) as upload}
           <tr>
             <td>{upload.title}</td>
-            <td>{upload.description || 'N/A'}</td> <!-- 🔹 Aggiunto campo Description -->
+            <td>{upload.description || 'N/A'}</td> 
             <td>{upload.category}</td>
             <td>{upload.language}</td>
             <td>{upload.provider}</td>
@@ -457,7 +604,7 @@ let previewUrl = writable('');
   {#if $isUploading}
   <div class="loading-overlay">
     <div class="loading-spinner"></div>
-    <p>Caricamento in corso...</p>
+    <p>Loading...</p>
   </div>
 {/if}
 
@@ -500,11 +647,11 @@ let previewUrl = writable('');
           <div class="button-container">
             <button type="submit" class="button" disabled={$isUploading}>
               {#if $isUploading}
-                ⏳ Caricamento...
+                ⏳ Loading...
               {:else}
                 Upload
               {/if}
-            </button>            <button type="button" class="button" style="background-color: gray;" on:click={() => showModal.set(false)}>Annulla</button>
+            </button>            <button type="button" class="button" style="background-color: gray;" on:click={() => showModal.set(false)}>Cancel</button>
           </div>
         </form>
       </div>
